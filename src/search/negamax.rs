@@ -59,40 +59,19 @@ pub fn negamax(weakfish: &Weakfish, board: &Board, depth: u8, mut alpha: f32, mu
 
     for m in movegen {
         let b = board.make_move_new(m);
-
-        // let mut score = 0f32;
-
-        // Lookup in transposition table
-        // let hash = table.hash(board);
-    
-        // if let Some(entry) = hashmap.get(&hash) {
-        //     score = entry.score;
-        // } else {
-        //     score = -negamax(&b, depth - 1, -beta, -alpha, -turn_multiplier, ply + 1, table, hashmap).1;
-        // }
-
         score = -negamax(weakfish, &b, depth - 1, -beta, -alpha, -turn_multiplier, ply + 1, table, hashmap).1;
 
         if score > max_score {
             best_so_far = Some(m);
             max_score = score;
         }
-        // Only works with: turn multiplier in evaluate & max_score
-        // if turn_multiplier == 1f32 {
-        //     if score > max_score {
-        //         best_so_far = Some(m);
-        //         max_score = score;
-        //     }
-        // } else {
-        //     if score < max_score {
-        //         best_so_far = Some(m);
-        //         max_score = score;
-        //     }
-        // }
+
         if depth == 7 {
             println!("{} {:0.1} | best {:0.1} ({})", m, score, max_score, if let Some(x) = best_so_far { x.to_string() } else { "None".to_string() });
         }
+
         alpha = if alpha >= score { alpha } else { score };
+        
         if alpha >= beta {
             break;
         }
